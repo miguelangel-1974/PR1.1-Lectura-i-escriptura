@@ -1,5 +1,11 @@
 package com.project;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class PR115cp {
 
     public static void main(String[] args) {
@@ -20,5 +26,23 @@ public class PR115cp {
 
     // Mètode per copiar un arxiu de text de l'origen al destí
     public static void copiarArxiu(String rutaOrigen, String rutaDesti) {
+        Path origen = Paths.get(rutaOrigen);
+        Path destino = Paths.get(rutaDesti);
+
+        if (Files.exists(destino)) {
+            System.out.println("ADVERTENCIA! El fichero de destino existe y se sobreescribira.");
+        }
+
+        if (Files.exists(origen) && Files.isRegularFile(origen)) {
+            try {
+                String contingut = Files.readString(origen, StandardCharsets.UTF_8);
+                Files.writeString(destino, contingut, StandardCharsets.UTF_8);
+                System.out.println("Se ha copiado el contenido correctamente.");
+            } catch (IOException e) {
+                System.out.println("Ha habido un error al copiar el contenido, error: " + e.getMessage());
+            }
+        } else {
+            System.out.println("El fichero de origen no existe.");
+        }
     }
 }
